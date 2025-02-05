@@ -64,12 +64,11 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _icon() {
-    return Container(
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.white, width: 2),
-          shape: BoxShape.circle),
-      child: const Icon(Icons.person, color: Colors.white, size: 120),
-    );
+    return ClipOval(
+        child: SizedBox.fromSize(
+      size: const Size.fromRadius(100), // Image radius
+      child: Image.asset('icon/icon.jpg', fit: BoxFit.cover),
+    ));
   }
 
   Widget _inputField(String hintText, TextEditingController controller,

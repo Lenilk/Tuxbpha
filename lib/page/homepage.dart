@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:dryer_smart/components/comfirm_dialog_widget.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -53,22 +54,38 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void setStateApi(String state) async {
-    await http.get(Uri.parse(
-        'https://api.anto.io/channel/set/u6xuDlZyHCPHLDwRKhpOZA8SnZOjps0KMI51krgc/DHTTest/State/$state'));
+    if (state != this.state) {
+      debugPrint("Sent data");
+      final res = await http.get(Uri.parse(
+          'https://api.anto.io/channel/set/u6xuDlZyHCPHLDwRKhpOZA8SnZOjps0KMI51krgc/DHTTest/State/$state'));
+      if (res.statusCode == 200) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("Sent data success")));
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("fail to sent data")));
+      }
+    }
+  }
+
+  void allFetchData() {
+    try {
+      fetchHumid();
+      fetchTemp();
+      fetchState();
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
   late Timer fetchingData =
       Timer.periodic(const Duration(milliseconds: 2000), (timer) {
-    fetchHumid();
-    fetchTemp();
-    fetchState();
+    allFetchData();
   });
   @override
   void initState() {
     super.initState();
-    fetchHumid();
-    fetchTemp();
-    fetchState();
+    allFetchData();
     fetchingData;
   }
 
@@ -82,6 +99,15 @@ class _MyHomePageState extends State<MyHomePage> {
     return Text(s,
         style: const TextStyle(
             fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold));
+  }
+
+  void comfirmBtnFn(BuildContext context, String data) async {
+    bool? isComfirmed = await ComfirmDialogWidget(context, data);
+    if (isComfirmed != null) {
+      if (isComfirmed) {
+        setStateApi(data);
+      }
+    }
   }
 
   @override
@@ -128,7 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.greenAccent),
                     onPressed: () {
-                      setStateApi("LOW");
+                      comfirmBtnFn(context, "LOW");
                     },
                     child: myText("Low"),
                   ),
@@ -136,14 +162,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.amber),
                       onPressed: () {
-                        setStateApi("MEDIUM");
+                        comfirmBtnFn(context, "MEDIUM");
                       },
                       child: myText("Medium")),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.orangeAccent),
                     onPressed: () {
-                      setStateApi("HIGH");
+                      comfirmBtnFn(context, "HIGH");
                     },
                     child: myText("High"),
                   ),
@@ -155,7 +181,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.redAccent),
                     onPressed: () {
-                      setStateApi("DOWN");
+                      comfirmBtnFn(context, "DOWN");
                     },
                     child: myText("SHUTDOWN")),
               ),

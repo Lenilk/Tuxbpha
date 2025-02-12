@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dryer_smart/page/homepage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,6 +14,12 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController passwordController = TextEditingController();
   String username = "tuxbpha";
   String password = "tuxbpha2567";
+  bool isRemember = false;
+  @override
+  void initState() {
+    super.initState();
+    // TODO create function for read data to restore username and password
+  }
 
   @override
   void dispose() {
@@ -52,11 +59,32 @@ class _LoginPageState extends State<LoginPage> {
             _inputField("Username", usernameController),
             const SizedBox(height: 20),
             _inputField("Password", passwordController, isPassword: true),
-            const SizedBox(height: 50),
+            const SizedBox(height: 10),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Checkbox(
+                    checkColor: Colors.white,
+                    activeColor: Colors.blueAccent,
+                    value: isRemember,
+                    onChanged: (value) {
+                      if (value != null) {
+                        setState(() {
+                          isRemember = value;
+                        });
+                      }
+                    }),
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
+                  child: Text(
+                    "จดจำชื่อผู้ใช้และรหัสผ่าน",
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
+                )
+              ],
+            ),
+            const SizedBox(height: 10),
             _loginBtn(),
-            const SizedBox(height: 20),
-            // _extraText(),
-            const SizedBox(height: 20),
           ],
         ),
       ),
@@ -97,9 +125,15 @@ class _LoginPageState extends State<LoginPage> {
         debugPrint("Password : ${passwordController.text}");
         if (usernameController.text == username &&
             passwordController.text == password) {
+          if (isRemember) {
+            debugPrint("Remember function");
+            //  TODO: create function for write data to save username and password
+          } else {
+            passwordController.clear();
+          }
+
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => const MyHomePage(title: "tuxbpha")));
-          passwordController.clear();
         } else {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content: Text("Username or Password is incorrect")));

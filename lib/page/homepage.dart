@@ -178,7 +178,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.greenAccent),
                     onPressed: () {
-                      comfirmBtnFn(context, "ต่ำ");
+                      comfirmBtnFn(context, "LOW");
                     },
                     child: myText("ต่ำ"),
                   ),
@@ -186,14 +186,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.amber),
                       onPressed: () {
-                        comfirmBtnFn(context, "ปานกลาง");
+                        comfirmBtnFn(context, "MEDIUM");
                       },
                       child: myText("ปานกลาง")),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.orangeAccent),
                     onPressed: () {
-                      comfirmBtnFn(context, "สูง");
+                      comfirmBtnFn(context, "HIGH");
                     },
                     child: myText("สูง"),
                   ),

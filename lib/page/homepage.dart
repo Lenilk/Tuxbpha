@@ -1,7 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
+import 'dart:isolate';
+import 'package:dryer_smart/components/icon_widget.dart';
+import 'package:dryer_smart/dto/data.dart';
+import 'package:dryer_smart/page/detail_dialog_widget.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:dryer_smart/components/comfirm_dialog_widget.dart';
@@ -16,40 +20,47 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   String? HumidVal = "Loading";
   String? TempVal = "Loading";
   String? state = "Loading";
-
-  Future<String?> fetchHumid() async {
+  void fetchHumid() async {
     final res = await http.get(Uri.parse(
         'https://api.anto.io/channel/get/u6xuDlZyHCPHLDwRKhpOZA8SnZOjps0KMI51krgc/DHTTest/DHT21'));
-    final body = jsonDecode(res.body) as Map<String, dynamic>;
+    String responseBody = utf8.decode(res.bodyBytes);
+
+    Data body = parseBody(responseBody);
     debugPrint(body.toString());
     setState(() {
-      HumidVal = body['value'];
+      HumidVal = body.value;
     });
-    return body['value'];
   }
 
   void fetchTemp() async {
-    debugPrint(fetchingData.isActive.toString());
     final res = await http.get(Uri.parse(
         'https://api.anto.io/channel/get/u6xuDlZyHCPHLDwRKhpOZA8SnZOjps0KMI51krgc/DHTTest/test'));
-    final body = jsonDecode(res.body) as Map<String, dynamic>;
+    String responseBody = utf8.decode(res.bodyBytes);
+
+    Data body = parseBody(responseBody);
     debugPrint(body.toString());
     setState(() {
-      TempVal = body['value'];
+      TempVal = body.value;
     });
+  }
+
+  Data parseBody(String body) {
+    final data = jsonDecode(body) as Map<String, dynamic>;
+    return Data.fromJson(data);
   }
 
   void fetchState() async {
     final res = await http.get(Uri.parse(
         'https://api.anto.io/channel/get/u6xuDlZyHCPHLDwRKhpOZA8SnZOjps0KMI51krgc/DHTTest/State'));
-    final body = jsonDecode(res.body) as Map<String, dynamic>;
+    String responseBody = utf8.decode(res.bodyBytes);
+
+    Data body = parseBody(responseBody);
     debugPrint(body.toString());
     setState(() {
-      state = body['value'];
+      state = body.value;
     });
   }
 
@@ -86,6 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     allFetchData();
+
     fetchingData;
   }
 
@@ -126,17 +138,29 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: AppBar(
           foregroundColor: Colors.white,
           backgroundColor: Colors.transparent,
+          actions: [
+            IconButton(
+                tooltip: "คู่มือการใช้งาน",
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const DetailPage()));
+                },
+                icon: const Icon(Icons.help))
+          ],
         ),
         backgroundColor: Colors.transparent,
         body: Padding(
-          padding: const EdgeInsets.fromLTRB(50, 150, 50, 150),
+          padding: const EdgeInsets.fromLTRB(50, 50, 50, 100),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
                 child: Column(
                   children: [
+                    icon_widget(80),
+                    SizedBox(height: 12,),
                     myText("แสดงค่าอุณหภูมิ"),
                     myText("$TempVal"),
                     myText("แสดงค่าความชื้น"),
@@ -154,24 +178,24 @@ class _MyHomePageState extends State<MyHomePage> {
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.greenAccent),
                     onPressed: () {
-                      comfirmBtnFn(context, "LOW");
+                      comfirmBtnFn(context, "ต่ำ");
                     },
-                    child: myText("Low"),
+                    child: myText("ต่ำ"),
                   ),
                   ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.amber),
                       onPressed: () {
-                        comfirmBtnFn(context, "MEDIUM");
+                        comfirmBtnFn(context, "ปานกลาง");
                       },
-                      child: myText("Medium")),
+                      child: myText("ปานกลาง")),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.orangeAccent),
                     onPressed: () {
-                      comfirmBtnFn(context, "HIGH");
+                      comfirmBtnFn(context, "สูง");
                     },
-                    child: myText("High"),
+                    child: myText("สูง"),
                   ),
                 ],
               ),
@@ -181,9 +205,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.redAccent),
                     onPressed: () {
-                      comfirmBtnFn(context, "DOWN");
+                      comfirmBtnFn(context, "หยุดการทำงาน");
                     },
-                    child: myText("SHUTDOWN")),
+                    child: myText("หยุดการทำงาน")),
               ),
               const SizedBox(height: 20),
               Center(
@@ -194,7 +218,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () {
                       exit(0);
                     },
-                    child: myText("Exit")),
+                    child: myText("ออก")),
               ),
             ],
           ),

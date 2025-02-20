@@ -214,7 +214,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.redAccent),
                     onPressed: () {
-                      comfirmBtnFn(context, "หยุดการทำงาน");
+                      comfirmBtnFn(context, "DOWN");
                     },
                     child: myText("หยุดการทำงาน")),
               ),

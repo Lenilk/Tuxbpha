@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:dryer_smart/page/homepage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dryer_smart/components/icon_widget.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

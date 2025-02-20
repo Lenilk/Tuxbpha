@@ -23,6 +23,15 @@ class _MyHomePageState extends State<MyHomePage> {
   String? HumidVal = "Loading";
   String? TempVal = "Loading";
   String? state = "Loading";
+  String stateInThai(String data){
+    switch(data){
+      case "LOW": return "ต่ำ";
+      case "MEDIUM": return "ปานกลาง";
+      case "HIGH": return "สูง";
+      case "DOWN": return "หยุดการทำงาน";
+      default: return "กำลังโหลด";
+    }
+  }
   void fetchHumid() async {
     final res = await http.get(Uri.parse(
         'https://api.anto.io/channel/get/u6xuDlZyHCPHLDwRKhpOZA8SnZOjps0KMI51krgc/DHTTest/DHT21'));
@@ -165,7 +174,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     myText("$TempVal"),
                     myText("แสดงค่าความชื้น"),
                     myText("$HumidVal"),
-                    myText('ระดับอุณหภูมิ: $state'),
+                    myText('ระดับอุณหภูมิ: ${stateInThai(state??"Loading")}'),
                   ],
                 ),
               ),

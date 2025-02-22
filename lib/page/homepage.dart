@@ -123,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void comfirmBtnFn(BuildContext context, String data) async {
-    bool? isComfirmed = await ComfirmDialogWidget(context, data);
+    bool? isComfirmed = await ComfirmDialogWidget(context, stateInThai(data));
     if (isComfirmed != null) {
       if (isComfirmed) {
         setStateApi(data);

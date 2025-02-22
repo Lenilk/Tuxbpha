@@ -106,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   late Timer fetchingData =
-  Timer.periodic(const Duration(milliseconds: 2000), (timer) {
+      Timer.periodic(const Duration(milliseconds: 2000), (timer) {
     allFetchData();
   });
 
@@ -132,7 +132,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void comfirmBtnFn(BuildContext context, String data) async {
     bool? isComfirmed = await showDialog<bool?>(
-        context: context, builder: (BuildContext context) => ComfirmDialogWidget(data: data));
+        context: context,
+        builder: (BuildContext context) =>
+            ComfirmDialogWidget(data: stateInThai(data)));
     if (isComfirmed != null) {
       if (isComfirmed) {
         setStateApi(data);
@@ -145,13 +147,13 @@ class _MyHomePageState extends State<MyHomePage> {
     return Container(
       decoration: const BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: [
-              Colors.blue,
-              Colors.red,
-            ],
-          )),
+        begin: Alignment.topRight,
+        end: Alignment.bottomLeft,
+        colors: [
+          Colors.blue,
+          Colors.red,
+        ],
+      )),
       child: Scaffold(
         appBar: AppBar(
           foregroundColor: Colors.white,
@@ -178,7 +180,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Column(
                   children: [
                     const icon_widget(radius: 80),
-                    const SizedBox(height: 12,),
+                    const SizedBox(
+                      height: 12,
+                    ),
                     myText("แสดงค่าอุณหภูมิ"),
                     myText("$TempVal"),
                     myText("แสดงค่าความชื้น"),

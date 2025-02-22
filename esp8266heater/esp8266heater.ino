@@ -113,6 +113,9 @@ void DHTFUNC() {
     if (t > 30 && stoped) {
       digitalWrite(fanPin, LOW);
     }
+    if(t>maxTemp && !stoped){
+      digitalWrite(fanPin, LOW);
+    }
     Serial.print("ความชื้น: ");
     Serial.print(h);
     Serial.println(" %");

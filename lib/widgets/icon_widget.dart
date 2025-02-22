@@ -11,6 +11,6 @@ class icon_widget extends StatelessWidget {
         child: SizedBox.fromSize(
           size: Size.fromRadius(radius), // Image radius
           child: Image.asset('icon/icon.jpg', fit: BoxFit.cover),
-        ));;
+        ));
   }
 }

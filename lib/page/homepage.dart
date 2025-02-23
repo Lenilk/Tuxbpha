@@ -2,13 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
-import 'package:dryer_smart/components/icon_widget.dart';
+import 'package:dryer_smart/widgets/icon_widget.dart';
 import 'package:dryer_smart/dto/data.dart';
 import 'package:dryer_smart/page/detail_dialog_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:dryer_smart/components/comfirm_dialog_widget.dart';
+import 'package:dryer_smart/widgets/comfirm_dialog_widget.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -23,6 +23,22 @@ class _MyHomePageState extends State<MyHomePage> {
   String? HumidVal = "Loading";
   String? TempVal = "Loading";
   String? state = "Loading";
+
+  String stateInThai(String data) {
+    switch (data) {
+      case "LOW":
+        return "ต่ำ";
+      case "MEDIUM":
+        return "ปานกลาง";
+      case "HIGH":
+        return "สูง";
+      case "DOWN":
+        return "หยุดการทำงาน";
+      default:
+        return "กำลังโหลด";
+    }
+  }
+
   void fetchHumid() async {
     final res = await http.get(Uri.parse(
         'https://api.anto.io/channel/get/u6xuDlZyHCPHLDwRKhpOZA8SnZOjps0KMI51krgc/DHTTest/DHT21'));
@@ -93,6 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
       Timer.periodic(const Duration(milliseconds: 2000), (timer) {
     allFetchData();
   });
+
   @override
   void initState() {
     super.initState();
@@ -114,7 +131,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void comfirmBtnFn(BuildContext context, String data) async {
-    bool? isComfirmed = await ComfirmDialogWidget(context, data);
+    bool? isComfirmed = await showDialog<bool?>(
+        context: context,
+        builder: (BuildContext context) =>
+            ComfirmDialogWidget(data: stateInThai(data)));
     if (isComfirmed != null) {
       if (isComfirmed) {
         setStateApi(data);
@@ -159,13 +179,15 @@ class _MyHomePageState extends State<MyHomePage> {
               Center(
                 child: Column(
                   children: [
-                    icon_widget(80),
-                    SizedBox(height: 12,),
+                    const icon_widget(radius: 80),
+                    const SizedBox(
+                      height: 12,
+                    ),
                     myText("แสดงค่าอุณหภูมิ"),
                     myText("$TempVal"),
                     myText("แสดงค่าความชื้น"),
                     myText("$HumidVal"),
-                    myText('ระดับอุณหภูมิ: $state'),
+                    myText('ระดับอุณหภูมิ: ${stateInThai(state ?? "Loading")}'),
                   ],
                 ),
               ),
@@ -178,7 +200,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.greenAccent),
                     onPressed: () {
-                      comfirmBtnFn(context, "ต่ำ");
+                      comfirmBtnFn(context, "LOW");
                     },
                     child: myText("ต่ำ"),
                   ),
@@ -186,14 +208,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.amber),
                       onPressed: () {
-                        comfirmBtnFn(context, "ปานกลาง");
+                        comfirmBtnFn(context, "MEDIUM");
                       },
                       child: myText("ปานกลาง")),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.orangeAccent),
                     onPressed: () {
-                      comfirmBtnFn(context, "สูง");
+                      comfirmBtnFn(context, "HIGH");
                     },
                     child: myText("สูง"),
                   ),
@@ -205,7 +227,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.redAccent),
                     onPressed: () {
-                      comfirmBtnFn(context, "หยุดการทำงาน");
+                      comfirmBtnFn(context, "DOWN");
                     },
                     child: myText("หยุดการทำงาน")),
               ),

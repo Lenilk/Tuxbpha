@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dryer_smart/page/homepage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:dryer_smart/components/icon_widget.dart';
+import 'package:dryer_smart/widgets/icon_widget.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -54,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            icon_widget(80),
+            const icon_widget(radius: 80),
             const SizedBox(height: 50),
             _inputField("Username", usernameController),
             const SizedBox(height: 20),

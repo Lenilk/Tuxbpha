@@ -1,3 +1,4 @@
+import 'package:dryer_smart/components/paragraph_text.dart';
 import 'package:flutter/material.dart';
 
 class DetailPage extends StatelessWidget {
@@ -19,31 +20,35 @@ class DetailPage extends StatelessWidget {
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             foregroundColor: Colors.white,
-            title: Text("คู่มือการใช้งาน",style: Theme.of(context).textTheme.bodyLarge,),
+            title: Text(
+              "คู่มือการใช้งาน",
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
             centerTitle: true,
           ),
           backgroundColor: Colors.transparent,
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 14),
             child: ListView(
-              children: [
-                const SizedBox(height: 12,),
-                Text(
-                  "อุณหภูมิต่ำ สำหรับผ้าบาง อุณหภูมิ 40-45 องศา ระยะเวลาการอบ 15 นาที เช่น ผ้าอ้อม เสื้อเด็ก ผ้าม่านแบบบาง ผ้าชนิดชีฟอง",
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                const SizedBox(
+              children: const [
+                SizedBox(
                   height: 12,
                 ),
-                Text(
-                    "อุณหภูมิปานกลาง สำหรับผ้าหนาปานกลาง อุณหภูมิ 45-60 องศา ระยะเวลาการอบ 20 นาที เช่น เสื้อเชิ้ต เสื้อยืด กางเกงสแล็ก",
-                    style: Theme.of(context).textTheme.bodyLarge),
-                const SizedBox(
+                ParagraphText(
+                    text:
+                        "อุณหภูมิต่ำ สำหรับผ้าบาง อุณหภูมิ 40-45 องศา ระยะเวลาการอบ 20 นาที เช่น ผ้าอ้อม เสื้อเด็ก ผ้าม่านแบบบาง ผ้าชนิดชีฟอง"),
+                SizedBox(
                   height: 12,
                 ),
-                Text(
-                    "อุณหภูมิสูง สำหรับผ้าหนา อุณหภูมิ 60-70 องศา ระยะเวลาการอบ 40 นาที เช่น ผ้านวม กางเกงยีนส์",
-                    style: Theme.of(context).textTheme.bodyLarge)
+                ParagraphText(
+                    text:
+                        "อุณหภูมิปานกลาง สำหรับผ้าหนาปานกลาง อุณหภูมิ 45-60 องศา ระยะเวลาการอบ 25 นาที เช่น เสื้อเชิ้ต เสื้อยืด กางเกงสแล็ก"),
+                SizedBox(
+                  height: 12,
+                ),
+                ParagraphText(
+                    text:
+                        "อุณหภูมิสูง สำหรับผ้าหนา อุณหภูมิ 60-70 องศา ระยะเวลาการอบ 40 นาที เช่น ผ้านวม กางเกงยีนส์"),
               ],
             ),
           ),

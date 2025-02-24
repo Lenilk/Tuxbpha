@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:dryer_smart/page/homepage.dart';
 import 'package:dryer_smart/widgets/icon_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -14,10 +16,34 @@ class _LoginPageState extends State<LoginPage> {
   String username = "tuxbpha";
   String password = "tuxbpha2567";
   bool isRemember = false;
+
+  void saveRemember(bool isRemem) async {
+    final pref = await SharedPreferences.getInstance();
+    await pref.setBool('isRemember', isRemem);
+  }
+
+  void saveData(String username, String password) async {
+    final pref = await SharedPreferences.getInstance();
+    await pref.setString('username', username);
+    await pref.setString('password', password);
+    saveRemember(true);
+    debugPrint("Saved data successed");
+  }
+
+  void getData() async {
+    final pref = await SharedPreferences.getInstance();
+    usernameController.text = pref.getString('username') ?? '';
+    passwordController.text = pref.getString('password') ?? '';
+    setState(() {
+      isRemember = pref.getBool('isRemember') ?? false;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     // TODO create function for read data to restore username and password
+    getData();
   }
 
   @override
@@ -90,8 +116,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-
-
   Widget _inputField(String hintText, TextEditingController controller,
       {isPassword = false}) {
     var border = OutlineInputBorder(
@@ -121,7 +145,9 @@ class _LoginPageState extends State<LoginPage> {
           if (isRemember) {
             debugPrint("Remember function");
             //  TODO: create function for write data to save username and password
+            saveData(usernameController.text, passwordController.text);
           } else {
+            saveRemember(false);
             passwordController.clear();
           }
 
